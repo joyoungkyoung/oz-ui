@@ -1,0 +1,19 @@
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  .logo-wrapper {
+    width: 300px;
+    .logo-icon {
+      width: 120px;
+    }
+  }
+
+  @media (min-width: 768px) {
+  }
+
+  @media (min-width: 1024px) {
+  }
+}
