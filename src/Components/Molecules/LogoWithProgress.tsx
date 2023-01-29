@@ -1,11 +1,11 @@
-import Logo from '@Components/Atoms/Logo';
-import Progress from '@Components/Atoms/Progress';
+import Logo from '@components/Atoms/Logo';
+import Progress from '@components/Atoms/Progress';
 import styled from 'styled-components';
 
 const LogoWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  row-gap: 20px;
+  row-gap: 30px;
   > svg {
     align-self: center;
   }

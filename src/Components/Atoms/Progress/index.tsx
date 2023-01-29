@@ -1,19 +1,62 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import CircleImg from '@Assets/circle.svg';
+import classNames from 'classnames';
+import CircleImg from '@assets/images/circle.svg';
+import { COLORS } from '@assets/styles/variable';
 import Particle from './Progress.data';
 
 const PARTICLE_COUNT = 10;
+
+const ProgressAtom = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const ProgressBar = styled.div`
   display: flex;
   width: 100%;
   box-shadow: 0 0 0 3px var(--primary-color) inset;
   border-radius: 2px;
+  &.load {
+    animation: FadeOut 500ms;
+    animation-fill-mode: forwards;
+    @keyframes FadeOut {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+  }
 `;
 
 const ProgressInner = styled.canvas`
   width: 100%;
+`;
+
+const ProgressMessage = styled.div`
+  position: absolute;
+  visibility: hidden;
+  height: 30px;
+  font-family: 'GmarketSansMedium';
+  font-size: 30px;
+  &.load {
+    visibility: visible;
+    opacity: 0;
+    animation: FadeIn 500ms 500ms;
+    animation-fill-mode: forwards;
+    @keyframes FadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+  }
 `;
 
 interface ProgressProps {
@@ -24,6 +67,7 @@ interface ProgressProps {
 const Progress = ({ current, max, onLoaded }: ProgressProps) => {
   const [percent, setPercent] = useState<number>(0);
   const [particles, setParticles] = useState<Particle[]>([]);
+  const [isLoaded, setLoaded] = useState<boolean>(false);
 
   useEffect(() => {
     const canvas = document.getElementById('progress-inner') as HTMLCanvasElement;
@@ -41,7 +85,7 @@ const Progress = ({ current, max, onLoaded }: ProgressProps) => {
       ctx.moveTo(loop * piece, 0);
       ctx.lineTo(loop * piece, canvas.height);
       ctx.closePath();
-      ctx.strokeStyle = '#ff3ba5';
+      ctx.strokeStyle = COLORS.primaryColor;
       ctx.lineWidth = 0.2;
       ctx.stroke();
     }
@@ -65,6 +109,7 @@ const Progress = ({ current, max, onLoaded }: ProgressProps) => {
   // percent check handling
   useEffect(() => {
     if (percent >= 100) {
+      setLoaded(true);
       onLoaded();
     }
   }, [percent]);
@@ -83,7 +128,7 @@ const Progress = ({ current, max, onLoaded }: ProgressProps) => {
 
     if (ctx && offCtx) {
       offCtx.clearRect(0, 0, canvas.width, canvas.height);
-      offCtx.fillStyle = '#ff3ba5';
+      offCtx.fillStyle = COLORS.primaryColor;
       offCtx.fillRect(0, 0, (canvas.width * per) / 100, canvas.height);
       const clipPath = new Path2D();
 
@@ -98,9 +143,12 @@ const Progress = ({ current, max, onLoaded }: ProgressProps) => {
   }, [current]);
 
   return (
-    <ProgressBar className="progress-bar">
-      <ProgressInner id="progress-inner" width={300} height={30} />
-    </ProgressBar>
+    <ProgressAtom className="progress-atom">
+      <ProgressBar className={classNames('progress-bar', { load: isLoaded })}>
+        <ProgressInner id="progress-inner" width={300} height={30} />
+      </ProgressBar>
+      <ProgressMessage className={classNames('message', { load: isLoaded })}>Welcome!</ProgressMessage>
+    </ProgressAtom>
   );
 };
 

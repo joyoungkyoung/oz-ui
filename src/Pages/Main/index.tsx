@@ -1,4 +1,4 @@
-import LogoWithProgress from '@Components/Molecules/LogoWithProgress';
+import LogoWithProgress from '@components/Molecules/LogoWithProgress';
 import React, { useState, useEffect } from 'react';
 import './Main.scss';
 
